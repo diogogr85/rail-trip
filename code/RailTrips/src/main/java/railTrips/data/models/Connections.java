@@ -1,13 +1,13 @@
-package data.models;
+package railTrips.data.models;
 
 import java.util.HashMap;
 
-public class Event {
+public class Connections {
 
     private String mCityFrom;
     private final HashMap<String, Integer> mCitiesTo;   //key -> city name; value -> distance between cities
 
-    public Event(String cityFrom) {
+    public Connections(String cityFrom) {
         mCityFrom = cityFrom;
         mCitiesTo = new HashMap<>();
     }

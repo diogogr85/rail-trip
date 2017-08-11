@@ -1,4 +1,4 @@
-package data;
+package railTrips.data;
 
 public class APIFacade {
 }
