@@ -1,9 +1,14 @@
 package railTripsTests;
 
+import com.google.gson.Gson;
 import org.junit.Test;
+import railTrips.data.contracts.FunctionsContract;
 import railTrips.data.models.Connection;
-import railTrips.data.parsers.Parser;
+import railTrips.data.parsers.ParserHelper;
+import railTrips.data.presenters.FunctionsPresenter;
+import railTrips.utils.Constants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ParserTest {
@@ -12,9 +17,45 @@ public class ParserTest {
     public void initDataTest() {
         final String data = "AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7";
 
-        Parser parser = new Parser();
-        parser.evaluateLine(data);
+        ParserHelper parser = ParserHelper.getInstance();
+        parser.evaluateData(data);
+    }
 
+    @Test
+    public void parseRoutes() {
+        final String data = "AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7";
+
+        ParserHelper parser = ParserHelper.getInstance();
+        parser.evaluateData(data);
+
+        final List<Connection> routesInput = parser.parseRoutes("A-E-B-C-D");
+
+        Gson gson = new Gson();
+        System.out.println(gson.toJson(routesInput));
+    }
+
+    @Test
+    public void calculateDistance() {
+        FunctionsPresenter presenter = new FunctionsPresenter();
+
+        FunctionsContract.View view = new FunctionsContract.View() {
+            @Override
+            public void onCalculateRouteDistance(String outputDistance) {
+                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, outputDistance));
+            }
+        };
+        presenter.bindView(view);
+
+        List<String> routes = new ArrayList<>();
+        routes.add("A-B-C");
+        routes.add("A-D");
+        routes.add("A-D-C");
+        routes.add("A-E-B-C-D");
+        routes.add("A-E-D");
+
+        for (String route : routes) {
+            presenter.calculateRouteDistance(route);
+        }
     }
 
 }
