@@ -1,6 +1,6 @@
 package railTrips.data.loaders;
 
-import railTrips.data.models.Connections;
+import railTrips.data.models.Connection;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -25,7 +25,7 @@ public class FileManager {
 
             String line;
 
-            final List<Connections> railData = new ArrayList<>();
+            final List<Connection> railData = new ArrayList<>();
             while ((line = buffer.readLine()) != null) {
                 System.out.println(line);
             }
