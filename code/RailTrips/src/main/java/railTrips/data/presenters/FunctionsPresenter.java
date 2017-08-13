@@ -26,7 +26,7 @@ public class FunctionsPresenter extends BasePresenter<FunctionsContract.View> im
             final List<Connection> routeInput = ParserHelper.getInstance().parseRoutes(inputRoute);
             final String distance = distanceToTravel(routeInput);
 
-            view.onCalculateRouteDistance(distance);
+            view.onOutputSuccess(distance);
         }
     }
 
@@ -60,10 +60,9 @@ public class FunctionsPresenter extends BasePresenter<FunctionsContract.View> im
             final Connection startConnection = ParserHelper.getInstance().getConnections().get(startCity);
 
             final int tripsCounter = countRoutes(startConnection, endCity, maxStops);
-            view.onNumberOfTrips(String.valueOf(tripsCounter));
+            view.onOutputSuccess(String.valueOf(tripsCounter));
         }
     }
-
 
     private int countRoutes(Connection startConnection, String endCity, int maxStops) {
 
@@ -82,6 +81,40 @@ public class FunctionsPresenter extends BasePresenter<FunctionsContract.View> im
 
         return counter;
     }
+    /** End - Number of trips */
 
+    /**
+     * find trips
+     */
+    @Override
+    public void findTrips(String startCity, String endCity, int stops) {
+        final FunctionsContract.View view = getView();
+        if (view != null) {
+            final Connection startConnection = ParserHelper.getInstance().getConnections().get(startCity);
+
+            final int counterPaths = findRoutes(startConnection, endCity, stops);
+            view.onOutputSuccess(String.valueOf(counterPaths));
+        }
+    }
+
+
+
+    private int findRoutes(Connection startConnection, String endCity, int stops) {
+
+        int counter = 0;
+        for (String city : startConnection.getCitiesAsList()) {
+            if (stops == 1) {
+                if (endCity.equals(city)) {
+                    counter += 1;
+                } else {
+                    counter += 0;
+                }
+            } else {
+                counter += findRoutes(ParserHelper.getInstance().getConnections().get(city), endCity, stops - 1);
+            }
+        }
+
+        return counter;
+    }
 
 }

@@ -40,13 +40,8 @@ public class ParserTest {
 
         FunctionsContract.View view = new FunctionsContract.View() {
             @Override
-            public void onCalculateRouteDistance(String outputDistance) {
-                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, outputDistance));
-            }
-
-            @Override
-            public void onNumberOfTrips(String outputTrips) {
-                //do nothing - add with number of trips
+            public void onOutputSuccess(String output) {
+                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, output));
             }
         };
         presenter.bindView(view);
@@ -69,19 +64,30 @@ public class ParserTest {
 
         FunctionsContract.View view = new FunctionsContract.View() {
             @Override
-            public void onCalculateRouteDistance(String outputDistance) {
-                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, outputDistance));
-            }
-
-            @Override
-            public void onNumberOfTrips(String outputTrips) {
-                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, outputTrips));
+            public void onOutputSuccess(String output) {
+                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, output));
             }
         };
         presenter.bindView(view);
 
         //startCity, endCity, maxStops
         presenter.numberOfTrips("C", "C", 3);
+    }
+
+    @Test
+    public void findTrips() {
+        FunctionsPresenter presenter = new FunctionsPresenter();
+
+        FunctionsContract.View view = new FunctionsContract.View() {
+            @Override
+            public void onOutputSuccess(String output) {
+                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, output));
+            }
+        };
+        presenter.bindView(view);
+
+        //startCity, endCity, maxStops
+        presenter.findTrips("A", "B", 4);
     }
 
 }
