@@ -9,7 +9,8 @@ public interface FunctionsContract {
     interface Presenter {
         void calculateRouteDistance(final String inputRoute);
         void numberOfTrips(final String startCity, final String endCity, final int maxStops);
-        void findTrips(final String startCity, final String endCity, final int stops);
+        void countTrips(final String startCity, final String endCity, final int stops);
+        void findShortestRouteLength(final String startCity, final String endCity);
     }
 
 }

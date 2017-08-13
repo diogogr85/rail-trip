@@ -9,6 +9,8 @@ import java.util.List;
 
 public class FunctionsPresenter extends BasePresenter<FunctionsContract.View> implements FunctionsContract.Presenter {
 
+    private int mShortestLength;
+
     public FunctionsPresenter() {
         final String data = "AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7";
 
@@ -59,13 +61,12 @@ public class FunctionsPresenter extends BasePresenter<FunctionsContract.View> im
         if (view != null) {
             final Connection startConnection = ParserHelper.getInstance().getConnections().get(startCity);
 
-            final int tripsCounter = countRoutes(startConnection, endCity, maxStops);
+            final int tripsCounter = numberOfRoutes(startConnection, endCity, maxStops);
             view.onOutputSuccess(String.valueOf(tripsCounter));
         }
     }
 
-    private int countRoutes(Connection startConnection, String endCity, int maxStops) {
-
+    private int numberOfRoutes(Connection startConnection, String endCity, int maxStops) {
         int counter = 0;
         for (String city : startConnection.getCitiesAsList()) {
             if (endCity.equals(city)) {
@@ -74,7 +75,7 @@ public class FunctionsPresenter extends BasePresenter<FunctionsContract.View> im
                 if (maxStops == 1) {
                     counter += 0;
                 } else {
-                    counter += 0 + countRoutes(ParserHelper.getInstance().getConnections().get(city), endCity, maxStops - 1);
+                    counter += 0 + numberOfRoutes(ParserHelper.getInstance().getConnections().get(city), endCity, maxStops - 1);
                 }
             }
         }
@@ -83,24 +84,23 @@ public class FunctionsPresenter extends BasePresenter<FunctionsContract.View> im
     }
     /** End - Number of trips */
 
+
+
     /**
-     * find trips
+     * Counting trips
      */
     @Override
-    public void findTrips(String startCity, String endCity, int stops) {
+    public void countTrips(String startCity, String endCity, int stops) {
         final FunctionsContract.View view = getView();
         if (view != null) {
             final Connection startConnection = ParserHelper.getInstance().getConnections().get(startCity);
 
-            final int counterPaths = findRoutes(startConnection, endCity, stops);
+            final int counterPaths = countTripesRoutes(startConnection, endCity, stops);
             view.onOutputSuccess(String.valueOf(counterPaths));
         }
     }
 
-
-
-    private int findRoutes(Connection startConnection, String endCity, int stops) {
-
+    private int countTripesRoutes(Connection startConnection, String endCity, int stops) {
         int counter = 0;
         for (String city : startConnection.getCitiesAsList()) {
             if (stops == 1) {
@@ -110,11 +110,68 @@ public class FunctionsPresenter extends BasePresenter<FunctionsContract.View> im
                     counter += 0;
                 }
             } else {
-                counter += findRoutes(ParserHelper.getInstance().getConnections().get(city), endCity, stops - 1);
+                counter += countTripesRoutes(ParserHelper.getInstance().getConnections().get(city), endCity, stops - 1);
             }
         }
 
         return counter;
     }
+    /** END - Counting trips */
+
+    /**
+     * Shortest route length
+     */
+    @Override
+    public void findShortestRouteLength(String startCity, String endCity) {
+        final FunctionsContract.View view = getView();
+        if (view != null) {
+            final Connection startConnection = ParserHelper.getInstance().getConnections().get(startCity);
+
+            mShortestLength = 0;
+            routeLength(startConnection, endCity, 0);
+
+            view.onOutputSuccess(mShortestLength != 0 ? String.valueOf(mShortestLength) : Constants.TRIP_ROUTE_INVALID);
+        }
+    }
+
+    private void routeLength(Connection startConnection, String endCity, int currentLength) {
+        try {
+            for (int currentIndex = 0; currentIndex < startConnection.getCitiesAsList().size(); currentIndex++) {
+                final String city = startConnection.getCitiesAsList().get(currentIndex);
+                currentLength += startConnection.getCitiesTo().get(city);
+
+                //stop condition
+                if (endCity.equals(city)) {
+                    if (mShortestLength == 0 || currentLength < mShortestLength) {
+                        mShortestLength = currentLength;
+                    }
+                    currentLength = 0;
+
+                } else {
+                    //if current node has link with the previous connection (variable loop not null), go back one step and take next node to avoid loop
+                    //if not, proceed with recurssion
+                    Integer loop = ParserHelper.getInstance().getConnections().get(city).getCitiesTo().get(startConnection.getCityFrom());
+                    if (loop != null && currentIndex + 1 < startConnection.getCitiesAsList().size()) {
+                        currentLength -= startConnection.getCitiesTo().get(city);
+                        mShortestLength = 0;
+                        currentIndex++;
+
+                        final String nextCity = startConnection.getCitiesAsList().get(currentIndex);
+                        currentLength += startConnection.getCitiesTo().get(nextCity);
+
+                        routeLength(ParserHelper.getInstance().getConnections().get(nextCity), endCity, currentLength);
+
+                    } else {
+                        routeLength(ParserHelper.getInstance().getConnections().get(city), endCity, currentLength);
+                    }
+                }
+            }
+
+        } catch (StackOverflowError error) {
+            mShortestLength = 0;
+            return;
+        }
+    }
+    /** END - Shortest route length */
 
 }
