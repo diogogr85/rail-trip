@@ -16,6 +16,9 @@ public class FunctionsPresenter extends BasePresenter<FunctionsContract.View> im
         parser.evaluateData(data);
     }
 
+    /**
+     * Routes distance
+     */
     @Override
     public void calculateRouteDistance(String inputRoute) {
         final FunctionsContract.View view = getView();
@@ -45,5 +48,40 @@ public class FunctionsPresenter extends BasePresenter<FunctionsContract.View> im
 
         return String.valueOf(distance);
     }
+    /** End - Routes distance */
+
+    /**
+     * Number of trips
+     */
+    @Override
+    public void numberOfTrips(String startCity, String endCity, int maxStops) {
+        final FunctionsContract.View view = getView();
+        if (view != null) {
+            final Connection startConnection = ParserHelper.getInstance().getConnections().get(startCity);
+
+            final int tripsCounter = countRoutes(startConnection, endCity, maxStops);
+            view.onNumberOfTrips(String.valueOf(tripsCounter));
+        }
+    }
+
+
+    private int countRoutes(Connection startConnection, String endCity, int maxStops) {
+
+        int counter = 0;
+        for (String city : startConnection.getCitiesAsList()) {
+            if (endCity.equals(city)) {
+                counter += 1;
+            } else {
+                if (maxStops == 1) {
+                    counter += 0;
+                } else {
+                    counter += 0 + countRoutes(ParserHelper.getInstance().getConnections().get(city), endCity, maxStops - 1);
+                }
+            }
+        }
+
+        return counter;
+    }
+
 
 }

@@ -1,6 +1,8 @@
 package railTrips.data.models;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Connection {
 
@@ -26,4 +28,9 @@ public class Connection {
     public void addConnection(final String city, final int distanceValue) {
         mCitiesTo.put(city, distanceValue);
     }
+
+    public List<String> getCitiesAsList() {
+        return new ArrayList<String>(mCitiesTo.keySet());
+    }
+
 }

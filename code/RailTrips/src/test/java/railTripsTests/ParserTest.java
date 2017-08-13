@@ -35,13 +35,18 @@ public class ParserTest {
     }
 
     @Test
-    public void calculateDistance() {
+    public void calculateDirectDistance() {
         FunctionsPresenter presenter = new FunctionsPresenter();
 
         FunctionsContract.View view = new FunctionsContract.View() {
             @Override
             public void onCalculateRouteDistance(String outputDistance) {
                 System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, outputDistance));
+            }
+
+            @Override
+            public void onNumberOfTrips(String outputTrips) {
+                //do nothing - add with number of trips
             }
         };
         presenter.bindView(view);
@@ -56,6 +61,27 @@ public class ParserTest {
         for (String route : routes) {
             presenter.calculateRouteDistance(route);
         }
+    }
+
+    @Test
+    public void numberOfTrips() {
+        FunctionsPresenter presenter = new FunctionsPresenter();
+
+        FunctionsContract.View view = new FunctionsContract.View() {
+            @Override
+            public void onCalculateRouteDistance(String outputDistance) {
+                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, outputDistance));
+            }
+
+            @Override
+            public void onNumberOfTrips(String outputTrips) {
+                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, outputTrips));
+            }
+        };
+        presenter.bindView(view);
+
+        //startCity, endCity, maxStops
+        presenter.numberOfTrips("C", "C", 3);
     }
 
 }
