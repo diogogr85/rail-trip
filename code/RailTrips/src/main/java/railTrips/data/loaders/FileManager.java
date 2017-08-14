@@ -1,6 +1,7 @@
 package railTrips.data.loaders;
 
 import railTrips.data.models.Connection;
+import railTrips.data.parsers.ParserHelper;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -18,16 +19,16 @@ public class FileManager {
         return new FileManager();
     }
 
-    public void readFile(final String filePath) {
+    public void prepareData(final String filePath) {
         try {
             final FileReader reader = new FileReader(filePath);
             final BufferedReader buffer = new BufferedReader(reader);
 
             String line;
 
-            final List<Connection> railData = new ArrayList<>();
+            ParserHelper parser = ParserHelper.getInstance();
             while ((line = buffer.readLine()) != null) {
-                System.out.println(line);
+                parser.evaluateData(line.toUpperCase().trim());
             }
             buffer.close();
 

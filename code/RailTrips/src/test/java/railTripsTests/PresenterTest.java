@@ -14,12 +14,14 @@ public class PresenterTest {
 
     @Test
     public void calculateDirectDistance() {
-        FunctionsPresenter presenter = new FunctionsPresenter();
+        final String data = "AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7";
+        FunctionsPresenter presenter = new FunctionsPresenter(data);
 
         FunctionsContract.View view = new FunctionsContract.View() {
             @Override
             public void onOutputSuccess(String output) {
-                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, output));
+                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, 0, output));
+//                assertEquals(9, Integer.parseInt(output));    //route: A-B-C
             }
         };
         presenter.bindView(view);
@@ -38,12 +40,14 @@ public class PresenterTest {
 
     @Test
     public void numberOfTrips() {
-        FunctionsPresenter presenter = new FunctionsPresenter();
+        final String data = "AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7";
+        FunctionsPresenter presenter = new FunctionsPresenter(data);
 
         FunctionsContract.View view = new FunctionsContract.View() {
             @Override
             public void onOutputSuccess(String output) {
-                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, output));
+                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, 0, output));
+                assertEquals(2, Integer.parseInt(output));
             }
         };
         presenter.bindView(view);
@@ -54,12 +58,14 @@ public class PresenterTest {
 
     @Test
     public void findTrips() {
-        FunctionsPresenter presenter = new FunctionsPresenter();
+        final String data = "AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7";
+        FunctionsPresenter presenter = new FunctionsPresenter(data);
 
         FunctionsContract.View view = new FunctionsContract.View() {
             @Override
             public void onOutputSuccess(String output) {
-                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, output));
+                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, 0, output));
+                assertEquals(3, Integer.parseInt(output));
             }
         };
         presenter.bindView(view);
@@ -70,12 +76,13 @@ public class PresenterTest {
 
     @Test
     public void shortestLength() {
-        FunctionsPresenter presenter = new FunctionsPresenter();
+        final String data = "AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7";
+        FunctionsPresenter presenter = new FunctionsPresenter(data);
 
         FunctionsContract.View view = new FunctionsContract.View() {
             @Override
             public void onOutputSuccess(String output) {
-                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, output));
+                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, 0, output));
                 assertEquals(9, Integer.parseInt(output));
             }
         };
@@ -87,12 +94,13 @@ public class PresenterTest {
 
     @Test
     public void differentRoutes() {
-        FunctionsPresenter presenter = new FunctionsPresenter();
+        final String data = "AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7";
+        FunctionsPresenter presenter = new FunctionsPresenter(data);
 
         FunctionsContract.View view = new FunctionsContract.View() {
             @Override
             public void onOutputSuccess(String output) {
-                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, output));
+                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, 0, output));
 //                assertEquals(7, Integer.parseInt(output));
             }
         };

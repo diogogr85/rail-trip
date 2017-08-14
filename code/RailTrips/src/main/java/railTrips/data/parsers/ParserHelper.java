@@ -1,6 +1,5 @@
 package railTrips.data.parsers;
 
-import com.google.gson.Gson;
 import railTrips.data.models.Connection;
 
 import java.util.ArrayList;
@@ -12,11 +11,9 @@ public class ParserHelper {
     private static ParserHelper sInstance;
 
     private final HashMap<String, Connection> mList;
-    private final Gson gson;
 
     private ParserHelper() {
         mList = new HashMap<>();
-        gson = new Gson();
     }
 
     public static ParserHelper getInstance() {

@@ -1,6 +1,5 @@
 package railTripsTests;
 
-import com.google.gson.Gson;
 import org.junit.Test;
 import railTrips.data.contracts.FunctionsContract;
 import railTrips.data.models.Connection;
@@ -29,9 +28,6 @@ public class ParserTest {
         parser.evaluateData(data);
 
         final List<Connection> routesInput = parser.parseRoutes("A-E-B-C-D");
-
-        Gson gson = new Gson();
-        System.out.println(gson.toJson(routesInput));
     }
 
 }
