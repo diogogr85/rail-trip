@@ -11,6 +11,7 @@ public interface FunctionsContract {
         void numberOfTrips(final String startCity, final String endCity, final int maxStops);
         void countTrips(final String startCity, final String endCity, final int stops);
         void findShortestRouteLength(final String startCity, final String endCity);
+        void differentRoutes(final String startCity, final String endCity, final int maxDistance);
     }
 
 }

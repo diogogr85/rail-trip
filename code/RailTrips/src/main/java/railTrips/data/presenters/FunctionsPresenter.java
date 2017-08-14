@@ -10,6 +10,7 @@ import java.util.List;
 public class FunctionsPresenter extends BasePresenter<FunctionsContract.View> implements FunctionsContract.Presenter {
 
     private int mShortestLength;
+    private int mCurrentLength;
 
     public FunctionsPresenter() {
         final String data = "AB5, BC4, CD8, DC8, DE6, AD5, CE2, EB3, AE7";
@@ -95,12 +96,12 @@ public class FunctionsPresenter extends BasePresenter<FunctionsContract.View> im
         if (view != null) {
             final Connection startConnection = ParserHelper.getInstance().getConnections().get(startCity);
 
-            final int counterPaths = countTripesRoutes(startConnection, endCity, stops);
+            final int counterPaths = countTripsRoutes(startConnection, endCity, stops);
             view.onOutputSuccess(String.valueOf(counterPaths));
         }
     }
 
-    private int countTripesRoutes(Connection startConnection, String endCity, int stops) {
+    private int countTripsRoutes(Connection startConnection, String endCity, int stops) {
         int counter = 0;
         for (String city : startConnection.getCitiesAsList()) {
             if (stops == 1) {
@@ -110,7 +111,7 @@ public class FunctionsPresenter extends BasePresenter<FunctionsContract.View> im
                     counter += 0;
                 }
             } else {
-                counter += countTripesRoutes(ParserHelper.getInstance().getConnections().get(city), endCity, stops - 1);
+                counter += countTripsRoutes(ParserHelper.getInstance().getConnections().get(city), endCity, stops - 1);
             }
         }
 
@@ -174,4 +175,44 @@ public class FunctionsPresenter extends BasePresenter<FunctionsContract.View> im
     }
     /** END - Shortest route length */
 
+    /**
+     * Number of different routes
+     */
+    @Override
+    public void differentRoutes(String startCity, String endCity, int maxLength) {
+        final FunctionsContract.View view = getView();
+        if (view != null) {
+            final Connection startConnection = ParserHelper.getInstance().getConnections().get(startCity);
+
+            mCurrentLength = 0;
+            int counter = differentRoutesCounter(startConnection, startConnection, endCity, 0, maxLength);
+            view.onOutputSuccess(String.valueOf(counter));
+        }
+    }
+
+    private int differentRoutesCounter(Connection startConnection, Connection parentConnection, String endCity, int currentLength, int maxLength) {
+        int counter = 0;
+        for (int currentIndex = 0; currentIndex < startConnection.getCitiesAsList().size(); currentIndex++) {
+            final String city = startConnection.getCitiesAsList().get(currentIndex);
+            mCurrentLength += startConnection.getCitiesTo().get(city);
+
+            if (mCurrentLength >= maxLength) {
+                mCurrentLength -= startConnection.getCitiesTo().get(city);
+                counter += 0;
+
+            } else {
+                if (endCity.equals(city)) {
+                    counter += 1;
+                }
+
+                counter += differentRoutesCounter(ParserHelper.getInstance().getConnections().get(city), startConnection, endCity, currentLength, maxLength);
+            }
+        }
+
+        //Returning one step
+        Integer value = parentConnection.getCitiesTo().get(startConnection.getCityFrom());
+        mCurrentLength -= (value != null ? value : 0);
+        return counter;
+    }
+    /** END - Number of different routes */
 }

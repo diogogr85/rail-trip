@@ -8,6 +8,8 @@ import railTrips.utils.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.TestCase.assertEquals;
+
 public class PresenterTest {
 
     @Test
@@ -74,12 +76,29 @@ public class PresenterTest {
             @Override
             public void onOutputSuccess(String output) {
                 System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, output));
+                assertEquals(9, Integer.parseInt(output));
             }
         };
         presenter.bindView(view);
 
         //startCity, endCity, maxStops
         presenter.findShortestRouteLength("A", "C");
+    }
+
+    @Test
+    public void differentRoutes() {
+        FunctionsPresenter presenter = new FunctionsPresenter();
+
+        FunctionsContract.View view = new FunctionsContract.View() {
+            @Override
+            public void onOutputSuccess(String output) {
+                System.out.println(String.format(Constants.OUTPUT_ANWSER_PREFIX, output));
+//                assertEquals(7, Integer.parseInt(output));
+            }
+        };
+        presenter.bindView(view);
+
+        presenter.differentRoutes("C", "C", 30);
     }
 
 }
